@@ -7,10 +7,10 @@
 using namespace std;
 using namespace Carbon;
 
-int main()
+int main(int argc, char** argv)
 {
 	
-	Config config;
+	Config config(argc, argv);
 
 	return 0;
 }
