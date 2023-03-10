@@ -2,11 +2,15 @@
 //
 
 #include "Carbon.h"
+#include "headers/core/config.hpp"
 
 using namespace std;
+using namespace Carbon;
 
 int main()
 {
-	cout << "Hello CMake." << endl;
+	
+	Config config;
+
 	return 0;
 }
