@@ -13,7 +13,7 @@ namespace Carbon {
 		HIGH
 	};
 
-	enum class CompileOptimizzation {
+	enum class OptimizeLevel {
 		NONE,
 		LEVEL1,
 		LEVEL2,
@@ -25,17 +25,24 @@ namespace Carbon {
 	/// </summary>
 	class Config {
 
+		bool _isValid = true;
+
 	public:
 		Config(int argc, char ** argv);
+		bool IsValid();
 
 		//Reporting
 		ErrVerbosity verbosity = ErrVerbosity::NORMAL;
-	
+		bool noWarn = false;
+
 		//Program
 		std::string sourceFile; //required
+		bool assemblyOnly = false;//Forces save assembly
+		bool saveAssembly = false;
+		bool preservePreCompile = false;
 		
 		//Compiler
-		CompileOptimizzation optimization = CompileOptimizzation::NONE;
+		OptimizeLevel optimization = OptimizeLevel::NONE;
 		std::string target; //CPU architecture
 
 	};
