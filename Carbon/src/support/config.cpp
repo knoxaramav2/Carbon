@@ -77,6 +77,9 @@ bool ValidateConfig(Config* config) {
 
 Carbon::Config::Config(int argc, char** argv)
 {
+	_reporter = ErrorReporter::GetInst();
+	_reporter->AddError(ERR_CODE::DUPLICATE_SRC, "Test");
+
 	for (int i = 0; i < argc; ++i) {
 		string op = argv[i];
 		string key, val;

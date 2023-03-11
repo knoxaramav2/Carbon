@@ -2,6 +2,8 @@
 #ifndef HEADER_CONFIG
 #define HEADER_CONFIG
 
+#include "..\reporting\errReporter.hpp"
+
 #include <string>
 #include <vector>
 
@@ -24,6 +26,8 @@ namespace Carbon {
 	/// CLI options
 	/// </summary>
 	class Config {
+
+		ErrorReporter* _reporter;
 
 		bool _isValid = true;
 

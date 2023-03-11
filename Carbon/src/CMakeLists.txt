@@ -4,6 +4,6 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (Carbon "Carbon.cpp" "Carbon.h" "headers/parser/parser.hpp" "headers/parser/preProcessor.hpp" "support/config.cpp" "headers/util/env.hpp")
+add_executable (Carbon "Carbon.cpp" "Carbon.h" "headers/parser/parser.hpp" "headers/parser/preProcessor.hpp" "support/config.cpp" "headers/util/env.hpp" "headers/reporting/errReporter.hpp" "support/errReporter.cpp")
 
 # TODO: Add tests and install targets if needed.
