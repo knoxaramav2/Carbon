@@ -63,12 +63,12 @@ void GetSimpleOption(string& key, Config* config) {
 	}
 }
 
-bool ValidateConfig(Config* config) {
+bool ValidateConfig(Config* config, Reporter* rpt) {
 
 	bool valid = true;
 
 	if (config->sourceFile == "") { 
-		//TODO Add error
+		rpt->AddError(ERR_CODE::MISSING_SRC, "");
 		valid = false; 
 	}
 
@@ -78,9 +78,8 @@ bool ValidateConfig(Config* config) {
 Carbon::Config::Config(int argc, char** argv)
 {
 	_reporter = ErrorReporter::GetInst();
-	_reporter->AddError(ERR_CODE::DUPLICATE_SRC, "Test");
 
-	for (int i = 0; i < argc; ++i) {
+	for (int i = 1; i < argc; ++i) {
 		string op = argv[i];
 		string key, val;
 		tie(key, val) = splitOption(op);
@@ -102,7 +101,7 @@ Carbon::Config::Config(int argc, char** argv)
 		}
 	}
 
-	_isValid = ValidateConfig(this);
+	_isValid = ValidateConfig(this, _reporter);
 
 	if (!_isValid) {
 		//TODO Add error

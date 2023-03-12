@@ -15,15 +15,17 @@ namespace Carbon {
 		virtual void AddError(ERR_CODE code, std::string subMsg) = 0;
 		virtual void ClearErrors() = 0;
 		virtual void PrintNext() = 0;
+		virtual void PrintAndClear() = 0;
 
 		virtual ~Reporter() = default;
 	};
 
-	class ErrorReporter : Reporter {
+	class ErrorReporter : public Reporter {
 
 	private:
 		static ErrorReporter* _inst;
 		static std::mutex _mtx;
+		static std::vector<std::string> _errList;
 	protected:
 		ErrorReporter();
 		~ErrorReporter();
@@ -38,6 +40,7 @@ namespace Carbon {
 		virtual void AddError(ERR_CODE code, std::string subMsg);
 		virtual void ClearErrors();
 		virtual void PrintNext();
+		virtual void PrintAndClear();
 	};
 }
 

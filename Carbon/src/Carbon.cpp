@@ -9,8 +9,14 @@ using namespace Carbon;
 
 int main(int argc, char** argv)
 {
-	
+	Reporter* reporter = ErrorReporter::GetInst();
 	Config config(argc, argv);
+
+	if (!config.IsValid()) {
+		reporter->AddError(ERR_CODE::INVALID_CONFIG, "");
+		reporter->PrintAndClear();
+		return -1;
+	}
 
 	return 0;
 }

@@ -13,7 +13,9 @@ namespace Carbon {
 		MISSING_SRC,
 		DUPLICATE_SRC,
 		INVALID_CLI_ARG,
+		INVALID_CLI_OP,
 
+		INVALID_CONFIG,
 
 		//WARNINGS
 		WRN_MRK = 5000,
@@ -22,11 +24,11 @@ namespace Carbon {
 
 	};
 
-	static class ErrorRegistry {
+	class ErrorRegistry {
 
 	public:
 
-		//std::string GetMessage(ERR_CODE code);
+		static std::string GetMessage(ERR_CODE code);
 
 	};
 }
