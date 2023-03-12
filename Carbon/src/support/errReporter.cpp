@@ -3,8 +3,12 @@
 using namespace std;
 using namespace Carbon;
 
+ErrorReporter* ErrorReporter::_inst;
+mutex ErrorReporter::_mtx;
+
 ErrorReporter::ErrorReporter()
 {
+	
 }
 
 ErrorReporter::~ErrorReporter()

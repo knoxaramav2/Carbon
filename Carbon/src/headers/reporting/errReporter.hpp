@@ -27,7 +27,6 @@ namespace Carbon {
 	protected:
 		ErrorReporter();
 		~ErrorReporter();
-
 	public:
 
 		//For thread safety
