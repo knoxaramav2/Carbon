@@ -40,13 +40,13 @@ void Carbon::VirtualFile::Rewind()
 	_idx = 0;
 }
 
-void Carbon::VirtualFile::DeleteLine()
+void Carbon::VirtualFile::DeleteLine(bool stepBack = true)
 {
 	if (_idx >= _contents.size()) { return; }
-
+	string t = _contents[_idx];
 	_contents.erase(_contents.begin() + _idx);
 
-	if (_idx >= _contents.size()) { _contents.size() - 1; }
+	if (_idx < _contents.size() && _idx > 0 && stepBack) { --_idx; }
 }
 
 void Carbon::VirtualFile::SetLine(std::string line)

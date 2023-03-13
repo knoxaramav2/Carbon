@@ -22,7 +22,7 @@ namespace Carbon {
 		std::string CurrentLine();
 		std::string At(int idx);
 		void Rewind();
-		void DeleteLine();
+		void DeleteLine(bool stepBack);
 		void SetLine(std::string line);
 		bool IsAtEnd();
 		std::string FilePath();

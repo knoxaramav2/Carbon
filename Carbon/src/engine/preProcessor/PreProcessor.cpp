@@ -8,6 +8,32 @@
 using namespace std;
 using namespace Carbon;
 
+const char* cws = " \t\n\r\f\v";
+
+//TODO implement as utility
+void Trim(string& line) {
+
+	if (line.find_first_not_of(cws) == string::npos) {
+		line.clear();
+		return;
+	}
+
+	size_t l = line.find_first_not_of(cws);
+	size_t r = line.find_last_not_of(cws)+1;
+
+	if (l != string::npos) { line.erase(r); }
+	if (l != string::npos) { line.erase(0, l); }
+}
+
+size_t NextWord(string& line, size_t start) {
+
+	size_t ret = start;
+
+
+
+	return ret;
+}
+
 void CleanVirtualFile(VirtualFile& file) {
 
 	string tmpLine;
@@ -22,17 +48,16 @@ void CleanVirtualFile(VirtualFile& file) {
 		if (multiLn) { 
 			idx = tmpLine.find_first_of('*');
 			if (idx == string::npos) {
-				file.DeleteLine();
+				file.DeleteLine(false);
 				continue;
 			}
 			else {
 				if (tmpLine[idx + 1] == '#') {
 					tmpLine.erase(tmpLine.begin() + idx, tmpLine.begin() + idx + 2);
 					multiLn = false;
-					file.SetLine(tmpLine);
 				}
 				else {
-					file.DeleteLine();
+					file.DeleteLine(false);
 					continue;
 				}
 			}
@@ -49,18 +74,12 @@ void CleanVirtualFile(VirtualFile& file) {
 				tmpLine.erase(tmpLine.begin() + idx, tmpLine.end());
 			}
 		}
-		
-		//check for ws
-		for each (char c in tmpLine)
-		{
-			if (isspace(c) == 0) {
-				nonWS = true;
-				break;
-			}
-		}
 
-		if (tmpLine.size() == 0) { file.DeleteLine(); }
-		else if (!nonWS) { file.DeleteLine(); }
+		Trim(tmpLine);
+
+		if (tmpLine.size() == 0) { 
+			file.DeleteLine(true); 
+		}
 		else { file.SetLine(tmpLine); }
 
 		file.Next();
@@ -69,6 +88,20 @@ void CleanVirtualFile(VirtualFile& file) {
 	//Test
 	file.Rewind();
 	while (!file.IsAtEnd()) { cout << file.Next() << endl; }
+}
+
+void ResolveImports(VirtualFile& file) {
+
+	file.Rewind();
+
+	string line;
+
+	while (!(line = file.Next()).empty()) {
+		if (line[0] != '@') { continue; }
+		
+		
+	}
+
 }
 
 Carbon::PreProcessor::PreProcessor(Config& config)
@@ -105,6 +138,7 @@ void Carbon::PreProcessor::LoadFile(string filePath)
 	}
 
 	CleanVirtualFile(file);
+	ResolveImports(file);
 }
 
 void Carbon::PreProcessor::ProcessSource()
