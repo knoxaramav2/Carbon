@@ -9,15 +9,9 @@ ErrorReporter* ErrorReporter::_inst;
 mutex ErrorReporter::_mtx;
 vector<string>ErrorReporter::_errList;
 
-ErrorReporter::ErrorReporter()
-{
-	
-}
+ErrorReporter::ErrorReporter(){}
 
-ErrorReporter::~ErrorReporter()
-{
-
-}
+ErrorReporter::~ErrorReporter(){}
 
 ErrorReporter* Carbon::ErrorReporter::GetInst()
 {

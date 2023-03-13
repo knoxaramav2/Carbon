@@ -17,6 +17,8 @@ namespace Carbon {
 
 		INVALID_CONFIG,
 
+		FILE_NOT_FOUND,
+
 		//WARNINGS
 		WRN_MRK = 5000,
 

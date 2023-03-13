@@ -2,6 +2,10 @@
 #include "..\headers\util\file.hpp"
 
 #include <filesystem>
+#include <iostream>
+#include <locale>
+#include <sstream>
+#include <codecvt>
 
 using namespace std;
 using namespace Carbon;
@@ -14,13 +18,17 @@ string Environment::_os;
 #ifdef _WIN32 || _WIN64
 
 #include <Windows.h>
+#include <direct.h>
+#include <WinBase.h>
 
 string M_OS = "WINDOWS";
 #define WINDOWS
-#endif
+#elif defined __unix__
 
-#ifdef __unix__
+#include <unistd.h>
+
 string M_OS = "LINUX";
+#define LINUX
 #endif
 
 Carbon::Environment::Environment()
@@ -33,7 +41,7 @@ Carbon::Environment::Environment()
 	_execPath = string(execPath);
 #endif
 
-#ifdef __unix__
+#ifdef LINUX
 
 
 #endif
@@ -62,7 +70,14 @@ std::string Carbon::Environment::ExecPath()
 
 std::string Carbon::Environment::WorkingPath()
 {
-	return std::string();
+	wchar_t tmp[MAX_PATH];
+	GetCurrentDirectoryW(MAX_PATH, tmp);
+	wstring wtmp(tmp);
+
+	using convert_typeX = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_typeX, wchar_t> cnvrt;
+
+	return cnvrt.to_bytes(wtmp);
 }
 
 std::string Carbon::Environment::OS()

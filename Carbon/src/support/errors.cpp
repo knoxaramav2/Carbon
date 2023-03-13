@@ -11,6 +11,8 @@ const string MSG_INV_OP = "Unrecognized option";
 
 const string MSG_INC_CNFG = "Configuration invalid, quitting";
 
+const string MSG_FILE_NOT_FOUND = "File not found";
+
 const string MSG_INTERNAL_NO_MSG = "<Internal Error> No message found for err code ";
 string ErrorRegistry::GetMessage(ERR_CODE code) {
 
@@ -23,6 +25,8 @@ string ErrorRegistry::GetMessage(ERR_CODE code) {
 	case ERR_CODE::INVALID_CLI_OP: ret = MSG_INV_OP; break;
 		
 	case ERR_CODE::INVALID_CONFIG: ret = MSG_INC_CNFG; break;
+
+	case ERR_CODE::FILE_NOT_FOUND: ret = MSG_FILE_NOT_FOUND; break;
 
 	default:
 		

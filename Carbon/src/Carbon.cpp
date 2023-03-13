@@ -5,6 +5,7 @@
 
 #include "Carbon.h"
 #include "headers/core/config.hpp"
+#include "headers/preProcessor/PreProcessor.hpp"
 
 #include "headers/util/env.hpp"
 #include "headers/util/file.hpp"
@@ -19,15 +20,20 @@ int main(int argc, char** argv)
 {
 	Reporter* reporter = ErrorReporter::GetInst();
 	Config config(argc, argv);
+	PreProcessor preProc(config);
 
 #ifdef DEBUG
-	Tests();
+	//Tests();
 #endif
 	
 	if (!config.IsValid()) {
 		reporter->PrintAndClear();
 		return -1;
 	}
+
+	preProc.ProcessSource();
+
+	reporter->PrintAndClear();
 
 	return 0;
 }
