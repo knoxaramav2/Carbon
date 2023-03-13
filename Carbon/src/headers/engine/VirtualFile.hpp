@@ -9,6 +9,7 @@ namespace Carbon {
 
 	class VirtualFile {
 
+		std::vector<VirtualFile*> _deps;
 		std::string _fileName;
 		std::vector<std::string> _contents;
 		int _idx;
@@ -24,6 +25,8 @@ namespace Carbon {
 		void DeleteLine();
 		void SetLine(std::string line);
 		bool IsAtEnd();
+		std::string FilePath();
+		bool LinkDependency(VirtualFile* file);
 	};
 
 }

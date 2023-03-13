@@ -30,7 +30,6 @@ void CleanVirtualFile(VirtualFile& file) {
 					tmpLine.erase(tmpLine.begin() + idx, tmpLine.begin() + idx + 2);
 					multiLn = false;
 					file.SetLine(tmpLine);
-					//continue;
 				}
 				else {
 					file.DeleteLine();

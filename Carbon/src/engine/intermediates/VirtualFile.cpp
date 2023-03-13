@@ -60,3 +60,19 @@ bool Carbon::VirtualFile::IsAtEnd()
 {
 	return _idx >= _contents.size();
 }
+
+string Carbon::VirtualFile::FilePath() {
+	return _fileName;
+}
+
+bool Carbon::VirtualFile::LinkDependency(VirtualFile* file)
+{
+	for each (VirtualFile* f in _deps)
+	{
+		if (f == file) { return true; }
+	}
+
+	_deps.push_back(file);
+
+	return true;
+}
