@@ -104,7 +104,6 @@ void PreProcessor::ResolveImports(VirtualFile* file) {
 			if (terms[0] == "@import" && terms[1][0] == '\"') {
 				file->DeleteLine(true);
 				imports.push_back(terms[1].substr(1, terms[1].size() - 2));
-				cout << file->FilePath() + " <- " + terms[1] << endl;
 			}
 			
 			delete[] terms;
