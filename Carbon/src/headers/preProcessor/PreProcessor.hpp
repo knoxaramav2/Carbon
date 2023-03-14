@@ -5,6 +5,7 @@
 #include "..\engine\VirtualFile.hpp"
 #include "..\reporting\errReporter.hpp"
 #include "../core/config.hpp"
+#include "..\engine\FileGraph.hpp"
 
 namespace Carbon {
 
@@ -12,16 +13,18 @@ namespace Carbon {
 
 		Reporter* _reporter;
 		Config* _config;
+		FileGraph* _graph;
+
+		//TODO Change to standalone function?
+		VirtualFile* LoadFile(std::string filePath);
+		void ResolveImports(VirtualFile* file);
 
 	public:
 		PreProcessor(Config& config);
+		~PreProcessor();
 
 		void ProcessSource();
-		void LoadFile(std::string filePath);
-
-
 	};
-
 }
 
 #endif

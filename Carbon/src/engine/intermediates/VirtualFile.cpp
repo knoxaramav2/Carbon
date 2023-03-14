@@ -69,7 +69,7 @@ bool Carbon::VirtualFile::LinkDependency(VirtualFile* file)
 {
 	for each (VirtualFile* f in _deps)
 	{
-		if (f == file) { return true; }
+		if (f == file) { return false; }
 	}
 
 	_deps.push_back(file);

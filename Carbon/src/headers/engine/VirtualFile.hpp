@@ -27,6 +27,8 @@ namespace Carbon {
 		bool IsAtEnd();
 		std::string FilePath();
 		bool LinkDependency(VirtualFile* file);
+
+		friend class FileGraph;
 	};
 
 }

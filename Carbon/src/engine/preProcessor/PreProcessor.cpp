@@ -21,34 +21,38 @@ void Trim(string& line) {
 	size_t l = line.find_first_not_of(cws);
 	size_t r = line.find_last_not_of(cws)+1;
 
-	if (l != string::npos) { line.erase(r); }
+	if (r != string::npos) { line.erase(r); }
 	if (l != string::npos) { line.erase(0, l); }
 }
 
-size_t NextWord(string& line, size_t start) {
+string* SplitDirective(string& line) {
 
-	size_t ret = start;
+	string* ret = new string[2];
+	size_t idx = line.find_first_of(cws);
 
-
+	ret[0] = line.substr(0, idx);
+	line.erase(0, ret[0].size());
+	idx = line.find_first_not_of(cws);
+	ret[1] = line.substr(idx, line.size());
 
 	return ret;
 }
 
-void CleanVirtualFile(VirtualFile& file) {
+void CleanVirtualFile(VirtualFile* file) {
 
 	string tmpLine;
 	bool multiLn = false;
 
-	while (!file.IsAtEnd()) {
+	while (!file->IsAtEnd()) {
 		bool nonWS = false;
 		
-		tmpLine = file.CurrentLine();
+		tmpLine = file->CurrentLine();
 		size_t idx = 0;
 
 		if (multiLn) { 
 			idx = tmpLine.find_first_of('*');
 			if (idx == string::npos) {
-				file.DeleteLine(false);
+				file->DeleteLine(false);
 				continue;
 			}
 			else {
@@ -57,7 +61,7 @@ void CleanVirtualFile(VirtualFile& file) {
 					multiLn = false;
 				}
 				else {
-					file.DeleteLine(false);
+					file->DeleteLine(false);
 					continue;
 				}
 			}
@@ -78,43 +82,71 @@ void CleanVirtualFile(VirtualFile& file) {
 		Trim(tmpLine);
 
 		if (tmpLine.size() == 0) { 
-			file.DeleteLine(true); 
+			file->DeleteLine(true);
 		}
-		else { file.SetLine(tmpLine); }
+		else { file->SetLine(tmpLine); }
 
-		file.Next();
+		file->Next();
 	}
-
-	//Test
-	file.Rewind();
-	while (!file.IsAtEnd()) { cout << file.Next() << endl; }
 }
 
-void ResolveImports(VirtualFile& file) {
+void PreProcessor::ResolveImports(VirtualFile* file) {
 
-	file.Rewind();
+	file->Rewind();
 
 	string line;
+	vector <string> imports;
 
-	while (!(line = file.Next()).empty()) {
-		if (line[0] != '@') { continue; }
-		
-		
+	while (!(line = file->CurrentLine()).empty()) {
+		if(line[0]=='@') {  
+			string* terms = SplitDirective(line);
+
+			if (terms[0] == "@import" && terms[1][0] == '\"') {
+				file->DeleteLine(true);
+				imports.push_back(terms[1].substr(1, terms[1].size() - 2));
+				cout << file->FilePath() + " <- " + terms[1] << endl;
+			}
+			
+			delete[] terms;
+		}
+		else {
+			file->Next();
+		}
 	}
 
+	for each (string str in imports)
+	{
+#ifndef NDEBUG
+		cout << "IMPORT " + str << endl;
+#endif
+		VirtualFile* dep = LoadFile(str);
+		_graph->LinkFiles(file, dep);
+	}
 }
 
 Carbon::PreProcessor::PreProcessor(Config& config)
 {
 	_reporter = ErrorReporter::GetInst();
 	_config = &config;
+	_graph = new FileGraph();
 }
 
-void Carbon::PreProcessor::LoadFile(string filePath)
+Carbon::PreProcessor::~PreProcessor()
+{
+	delete _graph;
+}
+
+VirtualFile* Carbon::PreProcessor::LoadFile(string filePath)
 {
 	ifstream reader;
 	string line;
-	VirtualFile file(filePath);
+	VirtualFile* file = nullptr;
+
+	if ((file = _graph->GetFileByName(filePath))) {
+		return file;
+	}
+
+	file = new VirtualFile(filePath);
 
 	//File name only
 	if (
@@ -129,19 +161,33 @@ void Carbon::PreProcessor::LoadFile(string filePath)
 
 	if (reader.fail()) {
 		_reporter->AddError(ERR_CODE::FILE_NOT_FOUND, "Unable to read file " + filePath);
-		return;
+		return nullptr;
 	}
 
 	while (reader.good()) {
 		getline(reader, line);
-		file.AddLine(line);
+		file->AddLine(line);
 	}
+
+	_graph->InsertFile(file);
 
 	CleanVirtualFile(file);
 	ResolveImports(file);
+
+#ifndef NDEBUG
+	//Test
+	cout << "Reading:\t\t" + file->FilePath() << endl;
+	file->Rewind();
+	while (!file->IsAtEnd()) { cout << file->Next() << endl; }
+#endif
+
+	return file;
 }
 
 void Carbon::PreProcessor::ProcessSource()
 {
 	LoadFile(_config->sourceFile);
+#ifndef NDEBUG
+	_graph->CrawlGraph();
+#endif
 }
